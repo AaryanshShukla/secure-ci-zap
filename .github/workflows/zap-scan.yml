@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
@@ -15,7 +19,7 @@ jobs:
         run: |
           npm install
           npm start &
-          sleep 15
+          sleep 25
 
       - name: Run OWASP ZAP Baseline Scan
         run: |
