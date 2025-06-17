@@ -23,8 +23,8 @@ jobs:
 
       - name: Run OWASP ZAP Baseline Scan
         run: |
-          docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-stable zap-baseline.py \
-            -t http://localhost:3000 \
+          docker run -v $(pwd):/zap/wrk/:rw --network="host" -t owasp/zap2docker-stable zap-baseline.py \
+            -t http://host.docker.internal:3000 \
             -r zap_report.html
 
       - name: Upload ZAP Report
