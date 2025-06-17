@@ -26,12 +26,15 @@ jobs:
         run: |
           sudo snap install zaproxy --classic
 
-      - name: Run ZAP Spider Scan
+      - name: Run OWASP ZAP CLI Scan
         run: |
-          zaproxy -cmd -quickurl http://localhost:3000 -quickout zap_report.html -quickprogress
+          mkdir -p zap-output
+          zaproxy -cmd -quickurl http://localhost:3000 \
+            -quickout zap-output/zap_report.html \
+            -quickprogress
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: zap_report.html
+          path: zap-output/zap_report.html
