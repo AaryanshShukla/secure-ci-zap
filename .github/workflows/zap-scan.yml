@@ -1,4 +1,4 @@
-name: OWASP ZAP Scan (Artifact Fix)
+name: OWASP ZAP Scan (Manual Upload Fix)
 
 on:
   pull_request:
@@ -12,9 +12,6 @@ jobs:
   zap_scan:
     runs-on: ubuntu-latest
 
-    outputs:
-      report_path: ${{ steps.save_report.outputs.report_path }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,29 +22,20 @@ jobs:
           npm start &
           sleep 25
 
-      - name: Run OWASP ZAP Full Scan
-        uses: zaproxy/action-full-scan@v0.10.0
-        with:
-          target: http://localhost:3000
-          allow_issue_writing: false
-          cmd_options: '-a'
-
-      - name: Confirm report exists
-        id: save_report
+      - name: Install ZAP CLI via Docker
         run: |
-          ls -l report_html
-          echo "report_path=report_html/report.html" >> $GITHUB_OUTPUT
+          docker pull owasp/zap2docker-stable
 
-  upload_report:
-    needs: zap_scan
-    runs-on: ubuntu-latest
+      - name: Run ZAP Scan and save HTML report
+        run: |
+          mkdir -p zap-output
+          docker run --network="host" -v $(pwd)/zap-output:/zap/wrk/:rw \
+            owasp/zap2docker-stable zap-baseline.py \
+            -t http://localhost:3000 \
+            -r zap_report.html
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Upload final ZAP report
+      - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
-          name: zap-artifact-clean
-          path: report_html/report.html
+          name: zap-scan-report-fixed
+          path: zap-output/zap_report.html
