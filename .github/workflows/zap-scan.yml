@@ -1,4 +1,4 @@
-name: OWASP ZAP Scan (GitHub Native)
+name: OWASP ZAP Scan (Artifact Fix)
 
 on:
   pull_request:
@@ -11,6 +11,9 @@ permissions:
 jobs:
   zap_scan:
     runs-on: ubuntu-latest
+
+    outputs:
+      report_path: ${{ steps.save_report.outputs.report_path }}
 
     steps:
       - name: Checkout code
@@ -29,10 +32,22 @@ jobs:
           allow_issue_writing: false
           cmd_options: '-a'
 
-      - name: Upload ZAP Report
+      - name: Confirm report exists
+        id: save_report
+        run: |
+          ls -l report_html
+          echo "report_path=report_html/report.html" >> $GITHUB_OUTPUT
+
+  upload_report:
+    needs: zap_scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Upload final ZAP report
         uses: actions/upload-artifact@v4
         with:
-          name: zap-scan-report
+          name: zap-artifact-clean
           path: report_html/report.html
-
-          # Updated: Final artifact name fix
