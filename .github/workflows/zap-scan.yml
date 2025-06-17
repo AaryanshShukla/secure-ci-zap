@@ -32,6 +32,7 @@ jobs:
           docker run --network="host" -v $(pwd)/zap-output:/zap/output \
             ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:3000 \
+            --autooff \
             -r /zap/output/zap_report.html
 
       - name: Upload ZAP Report
