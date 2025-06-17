@@ -1,4 +1,4 @@
-name: OWASP ZAP Scan (Manual Upload Fix)
+name: OWASP ZAP Scan (Manual + GitHub Docker Fix)
 
 on:
   pull_request:
@@ -22,15 +22,15 @@ jobs:
           npm start &
           sleep 25
 
-      - name: Install ZAP CLI via Docker
+      - name: Pull ZAP CLI (GitHub Container Registry)
         run: |
-          docker pull owasp/zap2docker-stable
+          docker pull ghcr.io/zaproxy/zaproxy:stable
 
       - name: Run ZAP Scan and save HTML report
         run: |
           mkdir -p zap-output
           docker run --network="host" -v $(pwd)/zap-output:/zap/wrk/:rw \
-            owasp/zap2docker-stable zap-baseline.py \
+            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t http://localhost:3000 \
             -r zap_report.html
 
