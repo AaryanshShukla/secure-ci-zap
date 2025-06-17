@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node and Start App
+      - name: Set up Node.js and start app
         run: |
           npm install
           npm start &
@@ -32,5 +32,5 @@ jobs:
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
-          name: zap-report
+          name: zap-scan-report
           path: report_html/report.html
