@@ -26,14 +26,13 @@ jobs:
         run: |
           docker pull ghcr.io/zaproxy/zaproxy:stable
 
-      - name: Run ZAP Scan and Save Report
+      - name: Run ZAP Full Scan and Save Report
         run: |
           mkdir -p zap-output
-          docker run --network="host" -v $(pwd)/zap-output:/zap/output \
-            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+          docker run --network="host" -v $(pwd)/zap-output:/zap/wrk \
+            ghcr.io/zaproxy/zaproxy:stable zap-full-scan.py \
             -t http://localhost:3000 \
-            --autooff \
-            -r /zap/output/zap_report.html
+            -r zap_report.html
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
