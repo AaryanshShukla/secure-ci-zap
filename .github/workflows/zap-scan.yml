@@ -15,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node and Start App
+      - name: Install dependencies and start app
         run: |
           npm install
           npm start &
