@@ -1,4 +1,4 @@
-name: OWASP ZAP Scan (No Docker)
+name: OWASP ZAP Scan (GitHub Native)
 
 on:
   pull_request:
@@ -16,25 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js and start app
+      - name: Set up Node and Start App
         run: |
           npm install
           npm start &
           sleep 25
 
-      - name: Install ZAP CLI
-        run: |
-          sudo snap install zaproxy --classic
-
-      - name: Run OWASP ZAP CLI Scan
-        run: |
-          mkdir -p zap-output
-          zaproxy -cmd -quickurl http://localhost:3000 \
-            -quickout zap-output/zap_report.html \
-            -quickprogress
+      - name: Run OWASP ZAP Full Scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: http://localhost:3000
+          allow_issue_writing: false
+          cmd_options: '-a'
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
           name: zap-report
-          path: zap-output/zap_report.html
+          path: report_html/report.html
