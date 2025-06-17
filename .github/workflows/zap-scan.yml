@@ -34,3 +34,5 @@ jobs:
         with:
           name: zap-scan-report
           path: report_html/report.html
+
+          # Updated: Final artifact name fix
