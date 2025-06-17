@@ -1,0 +1,13 @@
+
+{
+  "name": "vulnerable-zap-app",
+  "version": "1.0.0",
+  "description": "A simple vulnerable Node.js app for OWASP ZAP CI/CD integration",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
